@@ -1,0 +1,54 @@
+# Python bytecode files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Django migration files
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+staticfiles/
+
+# Environment files
+.env
+.venv/
+venv/
+env/
+env.bak/
+venv.bak/
+
+# VS Code settings
+.vscode/
+
+# MacOS Finder metadata
+.DS_Store
+
+# Windows system files
+Thumbs.db
+
+# PyCharm settings
+.idea/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Temporary files created by the operating system
+*.bak
+*.swp
+
+# Pytest and coverage reports
+*.coveragerc
+*.coverage
+.coverage/
+nosetests.xml
+coverage.xml
+
+# Sphinx documentation
+_docs/_build/
+
+# Local storage files
+#local_settings.py
