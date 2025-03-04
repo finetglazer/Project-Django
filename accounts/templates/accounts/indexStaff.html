@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECom2 Shop - Welcome</title>
+    <title>ECom2 Shop - Staff Page</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -223,23 +223,23 @@
         }
 
         .dropdown-menu a:hover {
-            background-color: var(--background-color);
+            background-color: var(--accent-color);
             color: white;
         }
 
         /* Additional styles */
-        /*.btn-login {*/
-        /*    color: white;*/
-        /*    background-color: var(--accent-color);*/
-        /*    padding: 0.5rem 1rem;*/
-        /*    border-radius: var(--border-radius);*/
-        /*    text-decoration: none;*/
-        /*    transition: var(--transition);*/
-        /*}*/
+        .btn-login {
+            color: white;
+            background-color: var(--accent-color);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            transition: var(--transition);
+        }
 
-        /*.btn-login:hover {*/
-        /*    background-color: #ff856e;*/
-        /*}*/
+        .btn-login:hover {
+            background-color: #ff856e;
+        }
 
         @media (max-width: 768px) {
             .hero h1 {
@@ -261,18 +261,18 @@
     <div class="header-content">
         <div class="logo">
             <i class="fas fa-shopping-bag"></i>
-            ECom2 Shop
+            ECom2 Shop - Staff Page
         </div>
         <nav>
             <!-- Conditionally display the user menu if the user is logged in -->
-            <div th:if="${session.loggedInCustomer != null}" class="user-menu">
+            <div th:if="${session.loggedInStaff != null}" class="user-menu">
                 <i class="fas fa-user" id="userIcon"></i>
                 <div class="dropdown-menu" id="dropdownMenu">
-                    <a href="/accounts/logout">Logout</a>
+                    <a href="/logout">Logout</a>
                 </div>
             </div>
             <!-- If the user is not logged in, show a login link -->
-<!--            <div th:if="${session.loggedInCustomer == null}">-->
+<!--            <div th:if="${session.loggedInStaff == null}">-->
 <!--                <a href="/login" class="btn-login">Login</a>-->
 <!--            </div>-->
         </nav>
@@ -280,48 +280,43 @@
 </header>
 
 <section class="hero">
-    <h1>Welcome to ECom2 Shop</h1>
-    <p>Discover amazing products with great deals and secure shopping experience</p>
+    <h1>Welcome to ECom2 Shop Staff Page</h1>
+    <p>Manage product listings, track and solve orders efficiently</p>
 </section>
 
 <div class="container">
     <div class="quick-actions">
-        <div class="action-card" onclick="window.location.href='http://127.0.0.1:8000/book/item/search'">
-            <i class="fas fa-store"></i>
-            <h3>Browse Products</h3>
-            <p>Explore our wide range of products</p>
+        <div class="action-card" onclick="window.location.href='item/staff/search'">
+            <i class="fas fa-boxes"></i>
+            <h3>Item Management</h3>
+            <p>Manage and update product listings</p>
         </div>
-        <div class="action-card" onclick="window.location.href='http://127.0.0.1:8000/cart'">
-            <i class="fas fa-shopping-cart"></i>
-            <h3>Your Cart</h3>
-            <p>View and manage your shopping cart</p>
-        </div>
-        <div class="action-card" onclick="window.location.href='/order/1'">
-            <i class="fas fa-box"></i>
-            <h3>Orders</h3>
-            <p>Track your orders and view history</p>
+        <div class="action-card" onclick="window.location.href='order/staff/all'">
+            <i class="fas fa-tasks"></i>
+            <h3>Order Solving</h3>
+            <p>Track and resolve customer orders</p>
         </div>
     </div>
 
     <div class="features">
         <div class="section-title">
-            <h2>Why Choose Us</h2>
+            <h2>Staff Tools & Benefits</h2>
         </div>
         <div class="feature-grid">
             <div class="feature-card">
-                <i class="fas fa-shipping-fast"></i>
-                <h3>Fast Delivery</h3>
-                <p>Get your orders delivered quickly and safely to your doorstep</p>
+                <i class="fas fa-chart-line"></i>
+                <h3>Performance Tracking</h3>
+                <p>Monitor sales performance and stock levels</p>
             </div>
             <div class="feature-card">
-                <i class="fas fa-shield-alt"></i>
-                <h3>Secure Shopping</h3>
-                <p>Shop with confidence with our secure payment system</p>
+                <i class="fas fa-user-shield"></i>
+                <h3>Secure Access</h3>
+                <p>Manage products and orders with secure access controls</p>
             </div>
             <div class="feature-card">
-                <i class="fas fa-headset"></i>
-                <h3>24/7 Support</h3>
-                <p>Our customer support team is always here to help you</p>
+                <i class="fas fa-comments"></i>
+                <h3>Customer Support Integration</h3>
+                <p>Work closely with customer support for better service</p>
             </div>
         </div>
     </div>
@@ -331,12 +326,12 @@
     <div class="container">
         <div class="stats-grid">
             <div class="stat-item">
-                <h3>10k+</h3>
-                <p>Happy Customers</p>
+                <h3>5k+</h3>
+                <p>Products Managed</p>
             </div>
             <div class="stat-item">
-                <h3>5k+</h3>
-                <p>Products</p>
+                <h3>10k+</h3>
+                <p>Orders Solved</p>
             </div>
             <div class="stat-item">
                 <h3>99%</h3>
@@ -344,7 +339,7 @@
             </div>
             <div class="stat-item">
                 <h3>24/7</h3>
-                <p>Customer Support</p>
+                <p>Staff Support</p>
             </div>
         </div>
     </div>

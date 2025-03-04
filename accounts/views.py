@@ -6,6 +6,7 @@ from .forms import RegistrationForm
 from .models import UserAccount
 from django.views.decorators.csrf import csrf_exempt
 import logging
+from django.contrib.auth.hashers import check_password
 from .services.auth_service import AuthService
 
 logger = logging.getLogger('accounts')
@@ -13,17 +14,25 @@ logger = logging.getLogger('accounts')
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
-        user = AuthService.authenticate_user(username, password)
-        if user is not None:
-            login(request, user)
-            return redirect('index')
-        else:
-            messages.error(request, "Invalid username or password")
+        try:
+            user = UserAccount.objects.get(username=username)
+        except UserAccount.DoesNotExist:
+            messages.error(request, "Invalid username or password.")
             return redirect('login')
 
+        if check_password(password, user.password):
+            # Manually set the backend attribute so that Django knows how to handle the session
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
+            login(request, user)
+            messages.success(request, "Logged in successfully!")
+            # Redirect to index or any other page
+            return redirect('index')
+        else:
+            messages.error(request, "Invalid username or password.")
+            return redirect('login')
     return render(request, 'accounts/login.html')
 
 
@@ -63,3 +72,8 @@ def register(request):
 # index, now just display the html, no logic code
 def index(request):
     return render(request, 'accounts/index.html')
+
+
+# index, now just display the html, no logic code
+def indexStaff(request):
+    return render(request, 'accounts/indexStaff.html')
