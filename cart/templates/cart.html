@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Shopping Cart | EcoShop</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Base reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1e3a8a; /* Navy blue */
+            --secondary-color: #3b82f6; /* Sky blue */
+            --accent-color: #f43f5e; /* Coral pink */
+            --success-color: #10b981; /* Green */
+            --background-color: #f3f4f6; /* Light grey */
+            --text-color: #1f2937; /* Dark grey */
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --animation-timing: 0.3s;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .cart-items {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            transition: all var(--animation-timing) ease;
+            background: white;
+        }
+
+        .cart-item:hover {
+            transform: translateX(5px);
+            box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .item-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .item-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .item-type {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+        }
+
+        .item-price {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: all var(--animation-timing) ease;
+            opacity: 0.7;
+        }
+
+        .remove-btn:hover {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+        .checkout-section {
+            display: grid;
+            gap: 1.5rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .checkout-options {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .option-group {
+            margin-bottom: 2rem;
+        }
+
+        .option-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .option-group h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .option-card {
+            border: 2px solid #eee;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all var(--animation-timing) ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+        }
+
+        .option-card:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .option-card.selected {
+            border-color: var(--secondary-color);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .option-card i {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .option-card p {
+            font-weight: 600;
+            margin: 0.5rem 0;
+        }
+
+        .option-card small {
+            color: #666;
+        }
+
+        .cart-summary {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .total-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all var(--animation-timing) ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkout-btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .checkout-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .animation-content {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .shipping-icon {
+            font-size: 4rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .shipping-text {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 6px;
+            background: #eee;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: var(--secondary-color);
+            transition: width 3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .empty-cart i {
+            font-size: 4rem;
+            color: var(--success-color);
+            margin-bottom: 1rem;
+        }
+
+        .empty-cart h2 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-cart p {
+            color: #666;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+
+        .slide-out {
+            animation: slideOut 0.5s ease-in forwards;
+        }
+
+        @media (max-width: 768px) {
+            .cart-item {
+                grid-template-columns: 1fr auto;
+                gap: 1rem;
+            }
+            .item-image { display: none; }
+            .options-grid { grid-template-columns: 1fr; }
+            .progress-bar { width: 200px; }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="header-content">
+        <a href="{% url 'accounts:index' %}" class="logo" style="text-decoration: none; color: inherit;">
+            <i class="fas fa-shopping-bag"></i>
+            ECom2 Shop
+        </a>
+        <nav>
+            <i class="fas fa-user"></i>
+        </nav>
+    </div>
+</header>
+<div class="container">
+    <div class="cart-items">
+        {% if carts|length == 0 %}
+        <div class="empty-cart">
+            <i class="fas fa-shopping-cart"></i>
+            <h2>Your cart is empty</h2>
+            <p>Browse our products and add something you like!</p>
+        </div>
+        {% endif %}
+
+        {% for cartItem in carts %}
+        <div class="cart-item">
+            <img class="item-image" src="{{ cartItem.item.product_image.url }}" alt="Product Image"/>
+            <div class="item-details">
+                <div>
+                    <h3 class="item-name">{{ cartItem.item.name }}</h3>
+                    <p class="item-type">{{ cartItem.item.category }}</p>
+                    {% if cartItem.item.category == 'BOOK' %}
+                    <small>Author: {{ cartItem.item.author }}</small>
+                    {% elif cartItem.item.category == 'CLOTHES' %}
+                    <small>Size: {{ cartItem.item.size }}, Color: {{ cartItem.item.color }}</small>
+                    {% endif %}
+                </div>
+                <p class="item-price">
+                    $<span>{{ cartItem.item.get_price_as_decimal|floatformat:2 }}</span>
+                </p>
+            </div>
+            <form action="{% url 'cart:cart_remove' customerId=customerId %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="itemId" value="{{ cartItem.item.id }}"/>
+                <button type="submit" class="remove-btn">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="checkout-section">
+        <div class="checkout-options">
+            <div class="option-group">
+                <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+                <div class="options-grid">
+                    <div class="option-card" onclick="selectOption(this, 'payment')" data-method="paypal">
+                        <i class="fab fa-paypal"></i>
+                        <p>PayPal</p>
+                        <small>Fast & Secure</small>
+                    </div>
+                    <div class="option-card" onclick="selectOption(this, 'payment')" data-method="card">
+                        <i class="fas fa-credit-card"></i>
+                        <p>Card</p>
+                        <small>Credit or Debit</small>
+                    </div>
+                    <div class="option-card" onclick="selectOption(this, 'payment')" data-method="cash">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <p>Cash</p>
+                        <small>Pay on Delivery</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <h3><i class="fas fa-shipping-fast"></i> Shipping Method</h3>
+                <div class="options-grid">
+                    <div class="option-card" onclick="selectOption(this, 'shipping')" data-method="sea">
+                        <i class="fas fa-ship"></i>
+                        <p>Sea Shipping</p>
+                        <small>7-14 days • $9.99</small>
+                    </div>
+                    <div class="option-card" onclick="selectOption(this, 'shipping')" data-method="drone">
+                        <i class="fas fa-drone"></i>
+                        <p>Drone Delivery</p>
+                        <small>1-2 days • $29.99</small>
+                    </div>
+                    <div class="option-card" onclick="selectOption(this, 'shipping')" data-method="road">
+                        <i class="fas fa-truck"></i>
+                        <p>Road Delivery</p>
+                        <small>3-5 days • $14.99</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cart-summary">
+            <p class="total-price">Total: $<span>{{ totalPrice|floatformat:2 }}</span></p>
+            <button data-customer-id="{{ customerId }}" onclick="startCheckout(this)" class="checkout-btn">
+                <i class="fas fa-lock"></i> Secure Checkout
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="checkout-animation">
+    <div class="animation-content">
+        <i class="shipping-icon fas fa-truck bounce"></i>
+        <h3 class="shipping-text">Processing your order...</h3>
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+        <p class="processing-text">Please don't close this window</p>
+    </div>
+</div>
+
+<script>
+    let selectedPayment = null;
+    let selectedShipping = null;
+
+    function selectOption(element, type) {
+        const container = element.closest('.option-group');
+        const allOptions = container.querySelectorAll('.option-card');
+
+        allOptions.forEach(option => {
+            option.classList.remove('selected');
+            option.style.transform = 'scale(1)';
+        });
+
+        element.classList.add('selected');
+        element.style.transform = 'scale(1.05)';
+
+        if (type === 'payment') {
+            selectedPayment = element.getAttribute('data-method');
+            updateShippingIcon(selectedPayment);
+        } else {
+            selectedShipping = element.getAttribute('data-method');
+        }
+
+        validateSelections();
+    }
+
+    function updateShippingIcon(method) {
+        const shippingIcon = document.querySelector('.shipping-icon');
+        if (!shippingIcon) return;
+
+        switch (method) {
+            case 'sea':
+                shippingIcon.className = 'shipping-icon fas fa-ship bounce';
+                break;
+            case 'drone':
+                shippingIcon.className = 'shipping-icon fas fa-drone bounce';
+                break;
+            default:
+                shippingIcon.className = 'shipping-icon fas fa-truck bounce';
+        }
+    }
+
+    function validateSelections() {
+        const checkoutBtn = document.querySelector('.checkout-btn');
+        if (selectedPayment && selectedShipping) {
+            checkoutBtn.style.opacity = '1';
+            checkoutBtn.style.cursor = 'pointer';
+        } else {
+            checkoutBtn.style.opacity = '0.7';
+            checkoutBtn.style.cursor = 'not-allowed';
+        }
+    }
+
+    function startCheckout(button) {
+        const customerId = button.getAttribute('data-customer-id');
+        console.log('Starting checkout...' + customerId);
+        if (!selectedPayment || !selectedShipping) {
+            showNotification('Please select both payment and shipping methods');
+            return;
+        }
+
+        const animation = document.querySelector('.checkout-animation');
+        const progress = document.querySelector('.progress');
+        const cartItems = document.querySelectorAll('.cart-item');
+
+        // Show animation overlay
+        animation.style.display = 'flex';
+        animation.style.opacity = '0';
+        setTimeout(() => {
+            animation.style.opacity = '1';
+        }, 50);
+
+        // Start progress bar
+        setTimeout(() => {
+            progress.style.width = '100%';
+        }, 100);
+
+        // Animate cart items sliding out
+        cartItems.forEach((item, index) => {
+            setTimeout(() => {
+                item.classList.add('slide-out');
+            }, index * 200);
+        });
+
+        // Update shipping icon based on selected method
+        updateShippingIcon(selectedShipping);
+
+        // Simulate order processing
+        setTimeout(() => completeCheckout(customerId), 3000);
+    }
+
+    function completeCheckout(customerId) {
+        const cartContainer = document.querySelector('.cart-items');
+        const animation = document.querySelector('.checkout-animation');
+        const totalPrice = document.querySelector('.total-price');
+        const checkoutSection = document.querySelector('.checkout-section');
+
+        // Hide animation
+        animation.style.opacity = '0';
+        setTimeout(() => {
+            animation.style.display = 'none';
+        }, 500);
+
+        // Show success message
+        cartContainer.innerHTML = `
+                <div class="empty-cart">
+                    <i class="fas fa-check-circle"></i>
+                    <h2>Order Placed Successfully!</h2>
+                    <p>Thank you for shopping with us!</p>
+                    <p style="margin-top: 1rem">Order confirmation has been sent to your email.</p>
+                </div>
+            `;
+
+        // Reset total and hide checkout section
+        totalPrice.textContent = 'Total: $0.00';
+        checkoutSection.style.display = 'none';
+
+        // Submit order to backend
+        submitOrder(customerId);
+    }
+
+    function submitOrder(customerId) {
+        const orderData = {
+            customerId: customerId,
+            paymentMethod: selectedPayment,
+            shippingMethod: selectedShipping,
+            timestamp: new Date().toISOString()
+        };
+
+        fetch(`/cart/checkout/${orderData.customerId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Order submitted successfully:', data);
+            })
+            .catch(error => {
+                console.error('Error submitting order:', error);
+                showNotification('Order processed but there was an error saving it. Our team will contact you shortly.');
+            });
+    }
+
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--primary-color);
+                color: white;
+                padding: 1rem;
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow);
+                z-index: 1000;
+                animation: slideIn 0.3s ease-out;
+            `;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease-in forwards';
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 3000);
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function () {
+        validateSelections();
+    });
+</script>
+</body>
+</html>
