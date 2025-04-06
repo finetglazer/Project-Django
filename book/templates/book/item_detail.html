@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ item.name }} | ECom2 Shop</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #3b82f6;
+            --accent-color: #f43f5e;
+            --success-color: #10b981;
+            --background-color: #f3f4f6;
+            --card-background: #ffffff;
+            --text-color: #1f2937;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--primary-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .product-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+        }
+
+        .product-details {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-category {
+            text-transform: uppercase;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .star {
+            color: #fbbf24;
+        }
+
+        .product-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 1rem 0;
+        }
+
+        .product-description {
+            margin-bottom: 2rem;
+            color: #4b5563;
+        }
+
+        .add-to-cart {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            margin-top: auto;
+        }
+
+        .add-to-cart:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        .review-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .reviews-list {
+            margin-bottom: 2rem;
+        }
+
+        .review {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 1rem;
+        }
+
+        .review:last-child {
+            border-bottom: none;
+        }
+
+        .review-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .review-rating {
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .review-text {
+            margin-top: 0.5rem;
+        }
+
+        .review-sentiment {
+            padding: 0.25rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .sentiment-positive {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .sentiment-neutral {
+            background-color: rgba(107, 114, 128, 0.1);
+            color: #6b7280;
+        }
+
+        .sentiment-negative {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .review-form {
+            background: #f9fafb;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        }
+
+        .btn-primary {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .similar-products {
+            margin-bottom: 3rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-card-content {
+            padding: 1.5rem;
+        }
+
+        .product-card-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .product-card-price {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .product-card-button {
+            width: 100%;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .product-card-button:hover {
+            background: #2563eb;
+        }
+
+        @media (max-width: 768px) {
+            .product-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-image {
+                height: 300px;
+            }
+            
+            .reviews-list {
+                padding: 0;
+            }
+            
+            .review {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="{% url 'accounts:index' %}" class="logo">
+                <i class="fas fa-shopping-bag"></i>
+                ECom2 Shop
+            </a>
+            <a href="{% url 'cart:cart_view' %}" style="color: white; text-decoration: none;">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">{{ cart_count|default:"0" }}</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="product-container">
+            <div class="product-image-container">
+                <img src="{{ item.product_image.url }}" alt="{{ item.name }}" class="product-image">
+            </div>
+            <div class="product-details">
+                <div class="product-category">{{ item.category }}</div>
+                <h1 class="product-title">{{ item.name }}</h1>
+                <div class="product-rating">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= item.average_rating %}
+                            <i class="fas fa-star star"></i>
+                        {% elif forloop.counter <= item.average_rating|add:0.5 %}
+                            <i class="fas fa-star-half-alt star"></i>
+                        {% else %}
+                            <i class="far fa-star star"></i>
+                        {% endif %}
+                    {% endfor %}
+                    <span>({{ item.reviews.count }} reviews)</span>
+                </div>
+                <p class="product-price">${{ item.price }}</p>
+                <p class="product-description">
+                    {{ item.description|default:"Experience the amazing quality and design of this product. Perfect for everyday use!" }}
+                </p>
+                <form action="{% url 'cart:add_to_cart' item.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="add-to-cart">
+                        <i class="fas fa-cart-plus"></i>
+                        Add to Cart
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="similar-products">
+            <h2 class="section-title">You might also like</h2>
+            <div class="products-grid">
+                {% for similar_item in similar_items %}
+                    <div class="product-card">
+                        <img src="{{ similar_item.product_image.url }}" alt="{{ similar_item.name }}" class="product-card-image">
+                        <div class="product-card-content">
+                            <h3 class="product-card-title">{{ similar_item.name }}</h3>
+                            <p class="product-card-price">${{ similar_item.price }}</p>
+                            <a href="{% url 'item_detail' similar_item.id %}" class="product-card-button">View Details</a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No similar products found.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="review-container">
+            <h2 class="section-title">Customer Reviews</h2>
+            
+            <div class="reviews-list">
+                {% for review in reviews %}
+                    <div class="review">
+                        <div>
+                            <div class="review-meta">
+                                <strong>{{ review.user.username }}</strong>
+                                <span>{{ review.created_at|date:"M d, Y" }}</span>
+                            </div>
+                            <div class="review-rating">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= review.rating %}
+                                        <i class="fas fa-star star"></i>
+                                    {% else %}
+                                        <i class="far fa-star star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if review.sentiment_score > 0.3 %}
+                                    <span class="review-sentiment sentiment-positive">Positive</span>
+                                {% elif review.sentiment_score < -0.3 %}
+                                    <span class="review-sentiment sentiment-negative">Negative</span>
+                                {% else %}
+                                    <span class="review-sentiment sentiment-neutral">Neutral</span>
+                                {% endif %}
+                            </div>
+                            <p class="review-text">{{ review.text }}</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-center">No reviews yet. Be the first to review this product!</p>
+                {% endfor %}
+            </div>
+            
+            {% if user.is_authenticated %}
+                <div class="review-form">
+                    <h3>Write a Review</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_rating">Rating</label>
+                            {{ review_form.rating }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_text">Your Review</label>
+                            {{ review_form.text }}
+                        </div>
+                        <button type="submit" class="btn-primary">Submit Review</button>
+                    </form>
+                </div>
+            {% else %}
+                <p class="text-center">
+                    <a href="{% url 'accounts:login' %}">Log in</a> to leave a review.
+                </p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
