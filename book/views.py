@@ -4,6 +4,8 @@ from django.contrib import messages
 import logging
 from django.shortcuts import render
 from django.db.models import Q, Count
+from django.utils import timezone
+
 from .models import Item
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -24,29 +26,48 @@ logger = logging.getLogger('book')
 
 
 # The search function you already have
+# Modify the search function in book/views.py
 def search(request):
     keyword = request.GET.get('keyword', '')
-    if keyword:
-        # Filter items by name or category that contain the keyword (case-insensitive)
-        items = Item.objects.filter(
-            Q(name__icontains=keyword) | Q(category__icontains=keyword)
-        )
-    else:
-        # If no keyword provided, display all items
-        items = Item.objects.all()
+    items = []
 
-    # Add some recommended items if we have a user
-    recommended_items = []
-    if request.user.is_authenticated:
-        recommended_items = RecommendationService.get_recommendations_for_user(
-            user=request.user,
-            limit=4
-        )
+    try:
+        if keyword:
+            # Filter items by name or category that contain the keyword (case-insensitive)
+            items = Item.objects.filter(
+                Q(name__icontains=keyword) | Q(category__icontains=keyword)
+            )
+        else:
+            # If no keyword provided, display all items
+            items = Item.objects.all()
 
-    return render(request, 'search.html', {
-        'items': items,
-        'recommended_items': recommended_items
-    })
+        # Add some recommended items if we have a user
+        recommended_items = []
+        if request.user.is_authenticated:
+            try:
+                recommended_items = RecommendationService.get_recommendations_for_user(
+                    user=request.user,
+                    limit=4
+                )
+            except Exception as e:
+                logger.error(f"Error getting recommendations: {str(e)}")
+                # Continue even if recommendations fail
+                recommended_items = []
+
+        return render(request, 'search.html', {
+            'items': items,
+            'recommended_items': recommended_items
+        })
+
+    except Exception as e:
+        logger.error(f"Database error in search view: {str(e)}")
+        messages.error(request, "Sorry, we encountered a problem connecting to our database. Please try again later.")
+        return render(request, 'search.html', {
+            'items': [],
+            'recommended_items': [],
+            'error': "Database connection error. Please try again later."
+        })
+
 
 def item_detail(request, item_id):
     """View for displaying item details and reviews"""
@@ -90,23 +111,15 @@ def item_detail(request, item_id):
 
     return render(request, 'book/item_detail.html', context)
 
-
+# Update this function in book/views.py
 def recommendations(request):
     """View for displaying personalized recommendations"""
     try:
-        # Get recommendations for current user
-        recommended_items = RecommendationService.get_recommendations_for_user(
-            user=request.user,
-            limit=8
-        )
+        # Get top-rated items as recommendations
+        recommended_items = Item.objects.all().order_by('-average_rating')[:8]
 
-        # Get trending items (most reviewed with positive sentiment)
-        trending_items = Item.objects.annotate(
-            review_count=Count('reviews'),
-            avg_sentiment=Avg('reviews__sentiment_score')
-        ).filter(
-            review_count__gt=0
-        ).order_by('-review_count', '-avg_sentiment')[:4]
+        # Get trending items (most recently added)
+        trending_items = Item.objects.all().order_by('-id')[:4]
 
         context = {
             'recommended_items': recommended_items,
@@ -120,15 +133,21 @@ def recommendations(request):
         return redirect('accounts:index')  # Redirect to home page on error
 
 
+
+# Add this function to book/views.py to check database connection
 def db_health_check(request):
     """
     Simple view to check if the database connection is working.
-    Access via /db-health/ after adding to urls.py
+    Access via /book/db-health/ after adding to urls.py
     """
     try:
         # Try to connect to the database
         conn = connections['default']
         conn.cursor()
+
+        # Try a simple query
+        test_query = Item.objects.first()
+
         db_status = "Database connection successful!"
         status_code = 200
     except OperationalError as e:
@@ -142,12 +161,10 @@ def db_health_check(request):
 
     return JsonResponse({
         'status': db_status,
-        'connection_settings': {
-            'ENGINE': connections['default'].settings_dict['ENGINE'],
-            'NAME': connections['default'].settings_dict['NAME'],
-            # Don't include sensitive info like password in the response
-        }
+        'engine': connections['default'].settings_dict['ENGINE'],
+        'name': connections['default'].settings_dict['NAME'],
+        'timestamp': timezone.now().isoformat(),
     }, status=status_code)
 
-# Add to your urls.py:
-# path('db-health/', db_health_check, name='db_health_check'),
+# Add this to your urls.py:
+# path('db-health/', views.db_health_check, name='db_health_check'),
