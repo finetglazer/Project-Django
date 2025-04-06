@@ -21,7 +21,7 @@ def login_view(request):
             user = UserAccount.objects.get(username=username)
         except UserAccount.DoesNotExist:
             messages.error(request, "Invalid username or password.")
-            return redirect('login')
+            return redirect('accounts:login')
 
         if check_password(password, user.password):
             # Manually set the backend attribute so that Django knows how to handle the session
@@ -29,17 +29,17 @@ def login_view(request):
             login(request, user)
             messages.success(request, "Logged in successfully!")
             # Redirect to index or any other page
-            return redirect('index')
+            return redirect('accounts:index')
         else:
             messages.error(request, "Invalid username or password.")
-            return redirect('login')
+            return redirect('accounts:login')
     return render(request, 'accounts/login.html')
 
 
 # Logout view
 def logout_view(request):
     logout(request)
-    return redirect('login')
+    return redirect('accounts:login')
 
 
 @csrf_exempt
@@ -58,12 +58,12 @@ def register(request):
             messages.success(request, 'Account created successfully. Redirecting to login...')
             logger.debug(f'User {user.username} registered successfully.')
 
-            return redirect('login')
+            return redirect('accounts:login')
         else:
             logger.warning('Invalid registration form data.')
             messages.error(request, 'Invalid form data')
 
-        return redirect('register')
+        return redirect('accounts:register')
 
     logger.debug('Rendering registration page.')
     return render(request, 'accounts/register.html')
