@@ -308,42 +308,77 @@
 
         <div class="section">
             <h2 class="section-title"><i class="fas fa-thumbs-up"></i> Recommended for You</h2>
-            
+            <!-- Modify the section that displays recommendations in book/templates/book/recommendations.html -->
+
             {% if recommended_items %}
-                <div class="products-grid">
-                    {% for item in recommended_items %}
-                        <div class="product-card">
-                            <img src="{{ item.product_image.url }}" alt="{{ item.name }}" class="product-card-image">
-                            <div class="product-card-content">
-                                <div class="product-category">{{ item.category }}</div>
-                                <h3 class="product-card-title">{{ item.name }}</h3>
-                                <p class="product-card-price">${{ item.price }}</p>
-                                <div class="product-card-rating">
-                                    {% for i in "12345" %}
-                                        {% if forloop.counter <= item.average_rating %}
-                                            <i class="fas fa-star star"></i>
-                                        {% elif forloop.counter <= item.average_rating|add:0.5 %}
-                                            <i class="fas fa-star-half-alt star"></i>
-                                        {% else %}
-                                            <i class="far fa-star star"></i>
-                                        {% endif %}
-                                    {% endfor %}
-                                    
-                                    {% if item.avg_sentiment > 0.3 %}
-                                        <span class="sentiment-tag sentiment-positive">Highly Rated</span>
-                                    {% endif %}
-                                </div>
-                                <a href="{% url 'item_detail' item.id %}" class="product-card-button">View Details</a>
-                            </div>
+            <div class="products-grid">
+                {% for item in recommended_items %}
+                <div class="product-card">
+                    <img src="{{ item.product_image.url }}" alt="{{ item.name }}" class="product-card-image">
+                    <div class="product-card-content">
+                        <div class="product-category">{{ item.category }}</div>
+                        <h3 class="product-card-title">{{ item.name }}</h3>
+                        <p class="product-card-price">${{ item.price }}</p>
+                        <div class="product-card-rating">
+                            {% for i in "12345" %}
+                            {% if forloop.counter <= item.average_rating %}
+                            <i class="fas fa-star star"></i>
+                            {% elif forloop.counter <= item.average_rating|add:0.5 %}
+                            <i class="fas fa-star-half-alt star"></i>
+                            {% else %}
+                            <i class="far fa-star star"></i>
+                            {% endif %}
+                            {% endfor %}
+
+                            {% if item.average_rating >= 4 %}
+                            <span class="sentiment-tag sentiment-positive">Highly Rated</span>
+                            {% endif %}
                         </div>
-                    {% endfor %}
+                        <a href="{% url 'item_detail' item.id %}" class="product-card-button">View Details</a>
+                    </div>
                 </div>
+                {% endfor %}
+            </div>
             {% else %}
-                <div class="no-items">
-                    <i class="fas fa-search"></i>
-                    <h3>No recommendations yet</h3>
-                    <p>Browse and review some products to get personalized recommendations</p>
+            <div class="no-items">
+                <i class="fas fa-search"></i>
+                <h3>No recommendations yet</h3>
+                <p>Browse and review some products to get personalized recommendations</p>
+            </div>
+            {% endif %}
+
+            <!-- Similar change for the trending_items section -->
+            {% if trending_items %}
+            <div class="products-grid">
+                {% for item in trending_items %}
+                <div class="product-card">
+                    <img src="{{ item.product_image.url }}" alt="{{ item.name }}" class="product-card-image">
+                    <div class="product-card-content">
+                        <div class="product-category">{{ item.category }}</div>
+                        <h3 class="product-card-title">{{ item.name }}</h3>
+                        <p class="product-card-price">${{ item.price }}</p>
+                        <div class="product-card-rating">
+                            {% for i in "12345" %}
+                            {% if forloop.counter <= item.average_rating %}
+                            <i class="fas fa-star star"></i>
+                            {% elif forloop.counter <= item.average_rating|add:0.5 %}
+                            <i class="fas fa-star-half-alt star"></i>
+                            {% else %}
+                            <i class="far fa-star star"></i>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        <a href="{% url 'item_detail' item.id %}" class="product-card-button">View Details</a>
+                    </div>
                 </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="no-items">
+                <i class="fas fa-fire"></i>
+                <h3>No trending items yet</h3>
+                <p>Check back soon for the hottest products!</p>
+            </div>
             {% endif %}
         </div>
 
