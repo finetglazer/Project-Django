@@ -285,9 +285,10 @@
 </section>
 
 <div class="container">
+    {% comment %}
+    The quick-actions section with proper card components
+    {% endcomment %}
     <div class="quick-actions">
-        # Add this code to the quick-actions section in accounts/templates/accounts/index.html
-
         <div class="action-card" onclick="window.location.href='http://127.0.0.1:8000/book/recommendations/'">
             <i class="fas fa-thumbs-up"></i>
             <h3>Recommendations</h3>
@@ -308,6 +309,7 @@
             <h3>Orders</h3>
             <p>Track your orders and view history</p>
         </div>
+    </div>
     </div>
 
     <div class="features">
