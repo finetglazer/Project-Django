@@ -348,6 +348,48 @@
         </div>
         {% endfor %}
     </div>
+    # This is a code snippet to add to book/templates/search.html
+    # Add this section just before the closing </main> tag
+
+    {% if recommended_items %}
+    <div class="section">
+        <h2 class="section-title" style="font-size: 1.5rem; color: var(--primary-color); margin-top: 2rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--secondary-color);">
+            <i class="fas fa-thumbs-up"></i> Recommended for You
+        </h2>
+
+        <div class="items-grid">
+            {% for item in recommended_items %}
+            <div class="item-card">
+                <a href="{% url 'item_detail' item.id %}">
+                    <img class="item-image" src="{{ item.product_image.url }}" alt="Item Image">
+                </a>
+                <div class="item-content">
+                    <div class="item-category">{{ item.category|default:"Book" }}</div>
+                    <h3 class="item-title">{{ item.name }}</h3>
+                    <div class="item-meta">
+                        <div class="rating">
+                            <i class="fas fa-star star"></i>
+                            <span>{{ item.average_rating|default:"No ratings" }}</span>
+                        </div>
+                        <div class="comments">
+                            <i class="fas fa-comment"></i>
+                            <span>{{ item.reviews.count }}</span>
+                        </div>
+                    </div>
+                    <div class="item-price">$ {{ item.price }}</div>
+                    <form action="{% url 'cart:add_to_cart' item.id %}" method="post" class="add-to-cart-form">
+                        {% csrf_token %}
+                        <button type="submit" class="add-to-cart">
+                            <i class="fas fa-cart-plus"></i>
+                            Add to Cart
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
 </main>
 
 <div class="cart-notification" id="cartNotification">

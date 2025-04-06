@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalized Recommendations | ECom2 Shop</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #3b82f6;
+            --accent-color: #f43f5e;
+            --success-color: #10b981;
+            --background-color: #f3f4f6;
+            --card-background: #ffffff;
+            --text-color: #1f2937;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--primary-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-category {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-card-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .product-card-price {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .product-card-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .star {
+            color: #fbbf24;
+        }
+
+        .product-card-button {
+            width: 100%;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            margin-top: auto;
+        }
+
+        .product-card-button:hover {
+            background: #2563eb;
+        }
+
+        .no-items {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .no-items i {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .sentiment-tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .sentiment-positive {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .sentiment-neutral {
+            background-color: rgba(107, 114, 128, 0.1);
+            color: #6b7280;
+        }
+
+        .sentiment-negative {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .info-box {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .info-box h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-box p {
+            color: #4b5563;
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 1rem;
+            }
+            
+            .hero {
+                padding: 2rem 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="{% url 'accounts:index' %}" class="logo">
+                <i class="fas fa-shopping-bag"></i>
+                ECom2 Shop
+            </a>
+            <div class="nav-links">
+                <a href="{% url 'search' %}" class="nav-link">
+                    <i class="fas fa-search"></i> Shop
+                </a>
+                <a href="{% url 'cart:cart_view' %}" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">{{ cart_count|default:"0" }}</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Personalized Recommendations</h1>
+            <p>Discover products tailored to your interests based on our sentiment analysis AI</p>
+        </div>
+
+        <div class="info-box">
+            <h3><i class="fas fa-robot"></i> Powered by AI</h3>
+            <p>Our recommendations are powered by sentiment analysis AI that analyzes customer reviews to understand what products people truly love. The more you interact with our store, the better our recommendations become!</p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title"><i class="fas fa-thumbs-up"></i> Recommended for You</h2>
+            
+            {% if recommended_items %}
+                <div class="products-grid">
+                    {% for item in recommended_items %}
+                        <div class="product-card">
+                            <img src="{{ item.product_image.url }}" alt="{{ item.name }}" class="product-card-image">
+                            <div class="product-card-content">
+                                <div class="product-category">{{ item.category }}</div>
+                                <h3 class="product-card-title">{{ item.name }}</h3>
+                                <p class="product-card-price">${{ item.price }}</p>
+                                <div class="product-card-rating">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= item.average_rating %}
+                                            <i class="fas fa-star star"></i>
+                                        {% elif forloop.counter <= item.average_rating|add:0.5 %}
+                                            <i class="fas fa-star-half-alt star"></i>
+                                        {% else %}
+                                            <i class="far fa-star star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    {% if item.avg_sentiment > 0.3 %}
+                                        <span class="sentiment-tag sentiment-positive">Highly Rated</span>
+                                    {% endif %}
+                                </div>
+                                <a href="{% url 'item_detail' item.id %}" class="product-card-button">View Details</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-items">
+                    <i class="fas fa-search"></i>
+                    <h3>No recommendations yet</h3>
+                    <p>Browse and review some products to get personalized recommendations</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <h2 class="section-title"><i class="fas fa-fire"></i> Trending Now</h2>
+            
+            {% if trending_items %}
+                <div class="products-grid">
+                    {% for item in trending_items %}
+                        <div class="product-card">
+                            <img src="{{ item.product_image.url }}" alt="{{ item.name }}" class="product-card-image">
+                            <div class="product-card-content">
+                                <div class="product-category">{{ item.category }}</div>
+                                <h3 class="product-card-title">{{ item.name }}</h3>
+                                <p class="product-card-price">${{ item.price }}</p>
+                                <div class="product-card-rating">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= item.average_rating %}
+                                            <i class="fas fa-star star"></i>
+                                        {% elif forloop.counter <= item.average_rating|add:0.5 %}
+                                            <i class="fas fa-star-half-alt star"></i>
+                                        {% else %}
+                                            <i class="far fa-star star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <span>({{ item.review_count }} reviews)</span>
+                                </div>
+                                <a href="{% url 'item_detail' item.id %}" class="product-card-button">View Details</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-items">
+                    <i class="fas fa-fire"></i>
+                    <h3>No trending items yet</h3>
+                    <p>Check back soon for the hottest products!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

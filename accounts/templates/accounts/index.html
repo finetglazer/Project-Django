@@ -286,6 +286,13 @@
 
 <div class="container">
     <div class="quick-actions">
+        # Add this code to the quick-actions section in accounts/templates/accounts/index.html
+
+        <div class="action-card" onclick="window.location.href='http://127.0.0.1:8000/book/recommendations/'">
+            <i class="fas fa-thumbs-up"></i>
+            <h3>Recommendations</h3>
+            <p>Discover products tailored for you</p>
+        </div>
         <div class="action-card" onclick="window.location.href='http://127.0.0.1:8000/book/item/search'">
             <i class="fas fa-store"></i>
             <h3>Browse Products</h3>
