@@ -3,7 +3,6 @@ FROM python:3.9-slim
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV DJANGO_SETTINGS_MODULE=myproject.settings
 
 # Set work directory
 WORKDIR /app
@@ -27,11 +26,21 @@ COPY . /app/
 RUN mkdir -p /app/media && \
     chmod -R 755 /app/media
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
+# Create static directory
+RUN mkdir -p /app/static && \
+    chmod -R 755 /app/static
 
 # Expose port 8000
 EXPOSE 8000
 
-# Run gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
+# Create entrypoint script
+RUN echo '#!/bin/bash\n\
+# Apply database migrations\n\
+python manage.py migrate --noinput\n\
+\n\
+# Start the Django server\n\
+python manage.py runserver 0.0.0.0:8000\n\
+' > /app/entrypoint.sh && chmod +x /app/entrypoint.sh
+
+# Run script
+CMD ["/app/entrypoint.sh"]
