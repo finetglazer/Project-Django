@@ -5,21 +5,15 @@ services:
     build: .
     environment:
       - DJANGO_SETTINGS_MODULE=myproject.settings_docker
-      - MONGO_URI=mongodb://mongo:27017/ec2
     ports:
       - "8000:8000"
     volumes:
       - ./static:/app/static
       - ./media:/app/media
-    depends_on:
-      - mongo
+    restart: always
+    networks:
+      - ecom_network
 
-  mongo:
-    image: mongo:4.4
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-
-volumes:
-  mongo_data:
+networks:
+  ecom_network:
+    driver: bridge

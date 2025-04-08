@@ -18,14 +18,22 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import HttpResponse
+from test_view import test_view  # Import the test view
 
+# Basic health check view to verify the server is running
+def health_check(request):
+    return HttpResponse("OK", content_type="text/plain")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),  # Include the accounts app URLs
     path('book/', include('book.urls')),  # Include the book app URLs
     path('cart/', include('cart.urls')),
+    path('health/', health_check),  # Add a simple health check endpoint
+    path('test/', test_view),  # Add the test view
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
